@@ -1,0 +1,405 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMP Examn Fee Calc By Teju</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 480px;
+            margin: 30px auto;
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin: 8px 0 4px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        input, select, button {
+            padding: 10px;
+            margin-bottom: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        select, input {
+            width: 100%;
+        }
+        .backSemester {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            gap: 10px;
+        }
+        .backSemester .aligned-inputs {
+            flex: 1;
+            display: flex;
+            gap: 10px;
+        }
+        .backSemester .aligned-inputs div {
+            flex: 1;
+        }
+        .backSemester .removeBackSemester {
+            padding: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            background-color: #dc3545;
+            color: #fff;
+            border-radius: 4px;
+            align-self: stretch;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+            border: none;
+            font-size: 14px;
+            padding: 8px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #addBackSemester {
+            background-color: #28a745;
+        }
+        #addBackSemester:hover {
+            background-color: #218838;
+        }
+        #resetButton {
+            background-color: #ffc107;
+        }
+        #resetButton:hover {
+            background-color: #e0a800;
+        }
+        #result {
+            margin-top: 15px;
+            font-weight: bold;
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .total-row {
+            font-weight: bold;
+            background-color: #f8f9fa;
+        }
+        .watermark {
+            text-align: center;
+            font-size: 14px;
+            color: #888;
+            margin-top: 15px;
+        }
+        .wide-input {
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .aligned-inputs {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        .aligned-inputs > * {
+            flex: 1;
+        }
+        .fine-input {
+            margin-top: 10px;
+        }
+        @media (max-width: 600px) {
+            .container {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SMP Exmn Fee Calculator</h1>
+        <form id="feeForm">
+            <label for="semester">Current Semester:</label>
+            <select id="semester" required>
+                <option value="" disabled selected>Select Current Sem</option>                
+                <option value="1">1st Sem</option>
+                <option value="2">2nd Sem</option>
+                <option value="3">3rd Sem</option>
+                <option value="4">4th Sem</option>
+                <option value="5">5th Sem</option>
+                <option value="6">6th Sem</option>
+               <option value="0">Failed/Supplement</option>
+            </select>
+
+            <label for="backSemesters">Back Subjects:</label>
+            <div id="backSemesters">
+                <div class="backSemester">
+                    <div class="aligned-inputs">
+                        <div>
+                            <input type="number" class="backSem" min="1" max="6" placeholder="Semester">
+                        </div>
+                        <div>
+                            <input type="number" class="backSub" min="0" placeholder="Subjects">
+                        </div>
+                    </div>
+                    <button type="button" class="removeBackSemester">X</button>
+                </div>
+            </div>
+            <button type="button" id="addBackSemester">Add Another Back Sem</button>
+
+            <div class="aligned-inputs">
+                <div>
+                    <label for="category">Category:</label>
+                    <select id="category" class="wide-input" required>
+                        <option value="General">General</option>
+                        <option value="OBC">OBC</option>
+                        <option value="Cat-1">Cat-1</option>
+                        <option value="SC">SC</option>
+                        <option value="ST">ST</option>
+                        <option value="Minority">Minority</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="income">Annual Income:</label>
+                    <input type="number" id="income" class="wide-input" required>
+                </div>
+            </div>
+
+            <div class="fine-input">
+                <label for="fineAmount">Select Period:</label>
+                <select id="fineAmount" class="wide-input" required>
+                    <option value="0">No Fine (04-02-25 to 03-03-25)</option>
+                    <option value="50">₹50 Fine (04-03-25 to 10-03-25)</option>
+                    <option value="100">₹100 Fine (11-03-25 to 17-03-25)</option>
+                    <option value="200">₹200 Fine (18-03-25 to 24-03-25)</option>
+                    <option value="400">₹400 Fine (25-03-25 to 01-04-25)</option>
+                </select>
+            </div>
+
+            <button type="button" id="resetButton">Reset</button>
+        </form>
+        <div id="result"></div>
+<div class="notes-section">
+    <h3>Important Notes:</h3>
+    <ol>
+        <li>Enter the Category as per your Caste Certificate.</li>
+        <li>Enter the exact Income as per your Income Certificate.</li>
+        <li>Cross check the Back Semester & Back Subjects.</li>
+        <li>Select the exact Fine amount according to Dates mentioned.</li>
+        <li>Fill the Examn Form with Exact Reg No. and all your details.</li>
+        <li>Cross check the fee payable with the office case worker Mr. Aruna L. before generating the K2 challan.</li>
+        <li>Submit the Fee Paid K2 Challan along with Exam Form with signature of HOD within 02 days after payment and mainatain a copy of the challan with you.</li>
+        <li>Visit Office for any doubts regarding the Examn Fee.</li>
+    </ol>
+</div>
+<div id="incomeAlert" class="income-alert"></div>
+
+        <div class="watermark">Teju</div>
+    </div>
+
+    <script>
+        function getOrdinalSuffix(num) {
+            const suffixes = ["th", "st", "nd", "rd"];
+            const value = num % 100;
+            return num + (suffixes[(value - 20) % 10] || suffixes[value] || suffixes[0]) + " Sem";
+        }
+
+        function calculateFees() {
+            const semester = parseInt(document.getElementById('semester').value);
+            const backSemesters = document.querySelectorAll('.backSemester');
+            const category = document.getElementById('category').value;
+            const income = parseFloat(document.getElementById('income').value) || 0;
+            const fineAmount = parseInt(document.getElementById('fineAmount').value);
+
+            if (semester === undefined || semester === null) {
+                document.getElementById('result').innerHTML = '';
+                return;
+            }
+
+            let regularFee = semester === 0 ? 0 : 350;
+            if (((category === 'OBC' || category === 'Cat-1' || category === 'General') && income <= 44400) || 
+                ((category === 'SC' || category === 'ST') && income <= 250000)) {
+                regularFee = semester === 0 ? 0 : 50;
+            }
+
+            let backFees = [];
+            let semesterSet = new Set();
+
+            backSemesters.forEach(semesterElem => {
+                const backSem = parseInt(semesterElem.querySelector('.backSem').value);
+                const backSub = parseInt(semesterElem.querySelector('.backSub').value);
+
+                if (backSem && backSub) {
+                    if (!semesterSet.has(backSem) && (semester === 0 || (backSem !== semester && backSem < semester))) {
+                        semesterSet.add(backSem);
+                        let fee = backSub > 2 ? 350 : 250;
+                        backFees.push({ semester: backSem, fee: fee, subjects: backSub });
+                    }
+                }
+            });
+
+            const totalBackFee = backFees.reduce((sum, back) => sum + back.fee, 0);
+            const totalSemesters = backFees.length + (semester === 0 ? 0 : 1);
+            const totalFineAmount = fineAmount * totalSemesters;
+            const totalFee = regularFee + totalBackFee + totalFineAmount;
+
+const incomeAlert = document.getElementById('incomeAlert');
+if (!income) {
+    incomeAlert.textContent = "Please enter your Annual Income as per Income Certificate!";
+} else {
+    incomeAlert.textContent = "";
+}
+
+            let resultHTML = `
+                <table>
+                    <tr>
+                        <th>Type</th>
+                        <th>Sem</th>
+                        <th>Subjects</th>
+                        <th>Fee (₹)</th>
+                        <th>Fine (₹)</th>
+                        <th>Total (₹)</th>
+                    </tr>`;
+
+            if (semester !== 0) {
+                resultHTML += `
+                    <tr>
+                        <td>Regular</td>
+                        <td>${getOrdinalSuffix(semester)}</td>
+                        <td>-</td>
+                        <td>${regularFee}</td>
+                        <td>${fineAmount}</td>
+                        <td>${regularFee + fineAmount}</td>
+                    </tr>`;
+            }
+
+            backFees.forEach(back => {
+                resultHTML += `
+                    <tr>
+                        <td>Back</td>
+                        <td>${getOrdinalSuffix(back.semester)}</td>
+                        <td>${back.subjects}</td>
+                        <td>${back.fee}</td>
+                        <td>${fineAmount}</td>
+                        <td>${back.fee + fineAmount}</td>
+                    </tr>`;
+            });
+
+            resultHTML += `
+                    <tr class="total-row">
+                        <td colspan="3"><strong>Total</strong></td>
+                        <td><strong>${regularFee + totalBackFee}</strong></td>
+                        <td><strong>${totalFineAmount}</strong></td>
+                        <td><strong>₹${totalFee}</strong></td>
+                    </tr>
+                </table>`;
+
+            document.getElementById('result').innerHTML = resultHTML;
+        }
+
+        ['semester', 'category', 'income', 'fineAmount'].forEach(id => {
+            document.getElementById(id).addEventListener('input', calculateFees);
+        });
+
+        document.getElementById('backSemesters').addEventListener('input', function(e) {
+            const backSemElem = e.target.closest('.backSemester');
+            if (!backSemElem) return;
+
+            const backSem = parseInt(backSemElem.querySelector('.backSem').value);
+            const currentSem = parseInt(document.getElementById('semester').value);
+            
+            if (backSem) {
+                const allBackSems = Array.from(document.querySelectorAll('.backSem'))
+                    .map(input => parseInt(input.value))
+                    .filter(val => val);
+
+                const isDuplicate = allBackSems.filter(sem => sem === backSem).length > 1;
+                const isCurrentSem = currentSem !== 0 && backSem === currentSem;
+                const isFutureSem = currentSem !== 0 && backSem > currentSem;
+
+                if (isDuplicate || isCurrentSem || isFutureSem) {
+                    backSemElem.querySelector('.backSem').value = '';
+                    backSemElem.querySelector('.backSub').value = '';
+                    
+                    let errorMsg = isDuplicate ? "Duplicate semester entry not allowed" :
+                                  isCurrentSem ? "Cannot enter current semester as back subject" :
+                                  "Cannot enter future semester as back subject";
+                    alert(errorMsg);
+                }
+            }
+            calculateFees();
+        });
+
+        document.getElementById('addBackSemester').addEventListener('click', function() {
+            const backSemesters = document.getElementById('backSemesters');
+            const newBackSemester = document.createElement('div');
+            newBackSemester.classList.add('backSemester');
+            newBackSemester.innerHTML = `
+                <div class="aligned-inputs">
+                    <div><input type="number" class="backSem" min="1" max="6" placeholder="Semester"></div>
+                    <div><input type="number" class="backSub" min="0" placeholder="Subjects"></div>
+                </div>
+                <button type="button" class="removeBackSemester">X</button>
+            `;
+            
+            newBackSemester.querySelector('.removeBackSemester').addEventListener('click', function() {
+                this.closest('.backSemester').remove();
+                calculateFees();
+            });
+            
+            backSemesters.appendChild(newBackSemester);
+        });
+
+        document.getElementById('resetButton').addEventListener('click', function() {
+            document.getElementById('feeForm').reset();
+            document.getElementById('result').innerHTML = '';
+            document.getElementById('semester').selectedIndex = 0;
+            
+            const backSemesters = document.getElementById('backSemesters');
+            backSemesters.innerHTML = `
+                <div class="backSemester">
+                    <div class="aligned-inputs">
+                        <div><input type="number" class="backSem" min="1" max="6" placeholder="Semester"></div>
+                        <div><input type="number" class="backSub" min="0" placeholder="Subjects"></div>
+                    </div>
+                    <button type="button" class="removeBackSemester">X</button>
+                </div>
+            `;
+
+            const removeBtn = backSemesters.querySelector('.removeBackSemester');
+            removeBtn.addEventListener('click', function() {
+                this.closest('.backSemester').remove();
+                calculateFees();
+            });
+        });
+    </script>
+</body>
+</html>
