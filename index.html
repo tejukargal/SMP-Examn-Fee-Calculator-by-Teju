@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -5,11 +6,12 @@
     <title>SMP Examn Fee Calc By Teju</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             background-color: #f4f4f4;
             margin: 0;
             padding: 0;
         }
+        /* Rest of your CSS remains the same except for any font-family declarations */
         .container {
             max-width: 480px;
             margin: 30px auto;
@@ -39,6 +41,7 @@
             border-radius: 4px;
             font-size: 14px;
             font-weight: bold;
+            font-family: 'Segoe UI', sans-serif;
         }
         select, input {
             width: 100%;
@@ -136,6 +139,34 @@
         .fine-input {
             margin-top: 10px;
         }
+        .income-alert {
+            color: #dc3545;
+            font-weight: bold;
+            margin: 15px 0;
+            font-size: 14px;
+            text-align: center;
+        }
+        .notes-section {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            border-left: 4px solid #28a745;
+        }
+        .notes-section h3 {
+            margin: 0 0 10px 0;
+            color: #28a745;
+            font-size: 16px;
+        }
+        .notes-section ol {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .notes-section li {
+            margin-bottom: 8px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
         @media (max-width: 600px) {
             .container {
                 width: 90%;
@@ -149,16 +180,17 @@
         <form id="feeForm">
             <label for="semester">Current Semester:</label>
             <select id="semester" required>
-                <option value="" disabled selected>Select Current Sem</option>                
+                <option value="" disabled selected>Select Current Sem</option>
                 <option value="1">1st Sem</option>
                 <option value="2">2nd Sem</option>
                 <option value="3">3rd Sem</option>
                 <option value="4">4th Sem</option>
                 <option value="5">5th Sem</option>
                 <option value="6">6th Sem</option>
-               <option value="0">Failed/Supplement</option>
+                <option value="0">Failed/Supplement</option>
             </select>
 
+            <!-- Rest of your HTML remains the same until the watermark -->
             <label for="backSemesters">Back Subjects:</label>
             <div id="backSemesters">
                 <div class="backSemester">
@@ -207,21 +239,21 @@
             <button type="button" id="resetButton">Reset</button>
         </form>
         <div id="result"></div>
-<div class="notes-section">
-    <h3>Important Notes:</h3>
-    <ol>
-        <li>Enter the Category as per your Caste Certificate.</li>
-        <li>Enter the exact Income as per your Income Certificate.</li>
-        <li>Cross check the Back Semester & Back Subjects.</li>
-        <li>Select the exact Fine amount according to Dates mentioned.</li>
-        <li>Fill the Examn Form with Exact Reg No. and all your details.</li>
-        <li>Cross check the fee payable with the office case worker Mr. Aruna L. before generating the K2 challan.</li>
-        <li>Submit the Fee Paid K2 Challan along with Exam Form with signature of HOD within 02 days after payment and mainatain a copy of the challan with you.</li>
-        <li>Visit Office for any doubts regarding the Examn Fee.</li>
-    </ol>
-</div>
-    <div id="incomeAlert" class="income-alert"></div>
-        <div class="watermark">By Teju SMP</div>
+        <div id="incomeAlert" class="income-alert"></div>
+        <div class="notes-section">
+            <h3>Important Notes:</h3>
+            <ol>
+                <li>Enter the Category as per your Caste Certificate.</li>
+                <li>Enter the exact Income as per your Income Certificate.</li>
+                <li>Cross check the Back Semester & Back Subjects.</li>
+                <li>Select the exact Fine amount according to Dates mentioned.</li>
+                <li>Fill the Examn Form with Exact Reg No. and all your details.</li>
+                <li>Cross check the fee payable with the office case worker Mr. Aruna L. before generating the K2 challan.</li>
+                <li>Submit the Fee Paid K2 Challan along with Exam Form with signature of HOD within 02 days after payment and mainatain a copy of the challan with you.</li>
+                <li>Visit Office for any doubts regarding the Examn Fee.</li>
+            </ol>
+        </div>
+        <div class="watermark">by Teju SMP</div>
     </div>
 
     <script>
@@ -237,6 +269,13 @@
             const category = document.getElementById('category').value;
             const income = parseFloat(document.getElementById('income').value) || 0;
             const fineAmount = parseInt(document.getElementById('fineAmount').value);
+
+            const incomeAlert = document.getElementById('incomeAlert');
+            if (!income) {
+                incomeAlert.textContent = "Please enter your Annual Income as per Income Certificate!";
+            } else {
+                incomeAlert.textContent = "";
+            }
 
             if (semester === undefined || semester === null) {
                 document.getElementById('result').innerHTML = '';
@@ -265,17 +304,13 @@
                 }
             });
 
+            // Sort backFees in descending order by semester
+            backFees.sort((a, b) => b.semester - a.semester);
+
             const totalBackFee = backFees.reduce((sum, back) => sum + back.fee, 0);
             const totalSemesters = backFees.length + (semester === 0 ? 0 : 1);
             const totalFineAmount = fineAmount * totalSemesters;
             const totalFee = regularFee + totalBackFee + totalFineAmount;
-
-const incomeAlert = document.getElementById('incomeAlert');
-if (!income) {
-    incomeAlert.textContent = "Please enter your Annual Income as per Income Certificate!";
-} else {
-    incomeAlert.textContent = "";
-}
 
             let resultHTML = `
                 <table>
@@ -288,6 +323,7 @@ if (!income) {
                         <th>Total (₹)</th>
                     </tr>`;
 
+            // Add regular semester first if not Failed/Supplement
             if (semester !== 0) {
                 resultHTML += `
                     <tr>
@@ -300,6 +336,7 @@ if (!income) {
                     </tr>`;
             }
 
+            // Add sorted back semesters
             backFees.forEach(back => {
                 resultHTML += `
                     <tr>
@@ -329,6 +366,10 @@ if (!income) {
         });
 
         document.getElementById('backSemesters').addEventListener('input', function(e) {
+            if (e.target.classList.contains('backSem') || e.target.classList.contains('backSub')) {
+                e.target.style.borderColor = '#ccc';
+            }
+
             const backSemElem = e.target.closest('.backSemester');
             if (!backSemElem) return;
 
@@ -346,6 +387,7 @@ if (!income) {
 
                 if (isDuplicate || isCurrentSem || isFutureSem) {
                     backSemElem.querySelector('.backSem').value = '';
+                   backSemElem.querySelector('.backSem').value = '';
                     backSemElem.querySelector('.backSub').value = '';
                     
                     let errorMsg = isDuplicate ? "Duplicate semester entry not allowed" :
@@ -358,6 +400,24 @@ if (!income) {
         });
 
         document.getElementById('addBackSemester').addEventListener('click', function() {
+            const existingBackSems = document.querySelectorAll('.backSemester');
+            let hasEmptyInputs = false;
+
+            existingBackSems.forEach(backSem => {
+                const semInput = backSem.querySelector('.backSem').value;
+                const subInput = backSem.querySelector('.backSub').value;
+                if (!semInput || !subInput) {
+                    hasEmptyInputs = true;
+                    if (!semInput) backSem.querySelector('.backSem').style.borderColor = '#dc3545';
+                    if (!subInput) backSem.querySelector('.backSub').style.borderColor = '#dc3545';
+                }
+            });
+
+            if (hasEmptyInputs) {
+                alert('Please fill the existing Back Semester details first!');
+                return;
+            }
+
             const backSemesters = document.getElementById('backSemesters');
             const newBackSemester = document.createElement('div');
             newBackSemester.classList.add('backSemester');
@@ -368,6 +428,13 @@ if (!income) {
                 </div>
                 <button type="button" class="removeBackSemester">X</button>
             `;
+            
+            const inputs = newBackSemester.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    this.style.borderColor = '#ccc';
+                });
+            });
             
             newBackSemester.querySelector('.removeBackSemester').addEventListener('click', function() {
                 this.closest('.backSemester').remove();
@@ -381,6 +448,7 @@ if (!income) {
             document.getElementById('feeForm').reset();
             document.getElementById('result').innerHTML = '';
             document.getElementById('semester').selectedIndex = 0;
+            document.getElementById('incomeAlert').textContent = '';
             
             const backSemesters = document.getElementById('backSemesters');
             backSemesters.innerHTML = `
